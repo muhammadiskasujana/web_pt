@@ -42,7 +42,13 @@ const progressRoutes = require('./modules/progres/routes');
 const menuRoutes = require('./modules/menu/routes');
 const waRoutes = require('./modules/whatsapp/routes')
 
-
+// 🔻 Tambah:
+const matelRoutes = require('./modules/master/matel/routes');
+const leasingRoutes = require('./modules/master/leasing/routes');
+const upahTarikRoutes = require('./modules/master/upahTarik/routes');
+const regionRoutes = require('./modules/master/region/routes');
+const poolRoutes = require('./modules/master/pool/routes');
+const docTypeRoutes = require('./modules/master/tipeDokumen/routes');
 
 const app = express();
 
@@ -95,6 +101,15 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/select', menuRoutes);
 app.use('/api/whatsapp', waRoutes);
+
+// 🔻 BHJP MASTER ROUTES
+app.use('/api/matel', matelRoutes);
+app.use('/api/leasings', leasingRoutes);
+app.use('/api/upah-tarik-rates', upahTarikRoutes);
+app.use('/api/regions', regionRoutes);
+app.use('/api/pools', poolRoutes);
+app.use('/api/doc-types', docTypeRoutes);
+
 
 
 // 404 handler for unmatched routes

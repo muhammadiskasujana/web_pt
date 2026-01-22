@@ -189,6 +189,29 @@ async function createTenantTablesFromFeatures(schemaName, enabledFeatures) {
             console.log(`✅ WhatsApp tables synced for ${schemaName}`);
         }
 
+        // ✅ BHJP MASTER DATA
+        if (enabledFeatures.includes('bhjp_master')) {
+            // Urutan: Region dulu (dipakai Pool & UpahTarikRate)
+            await models.Region.sync({ force: false });
+
+            // Leasing
+            await models.Leasing.sync({ force: false });
+
+            // Pool (butuh Region)
+            await models.Pool.sync({ force: false });
+
+            // Matel
+            await models.Matel.sync({ force: false });
+
+            // DocType
+            await models.DocType.sync({ force: false });
+
+            // Upah Tarik Rate (butuh Leasing + Region (+ VehicleType kalau dipakai))
+            await models.UpahTarikRate.sync({ force: false });
+
+            console.log(`✅ BHJP master tables synced for tenant: ${schemaName}`);
+        }
+
         // 9) Core fallback
         if (!enabledFeatures.includes('users')) {
             await models.User.sync({ force:false });

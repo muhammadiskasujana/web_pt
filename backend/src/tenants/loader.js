@@ -72,6 +72,13 @@ const {
     defineWhatsappMessageLogModel
 } = require("../modules/whatsapp/model");
 
+// 🔻 ADD: BHJP master models
+const defineMatelModel = require("../modules/master/matel/model");
+const defineLeasingModel = require("../modules/master/leasing/model");
+const defineUpahTarikRateModel = require("../modules/master/upahTarik/model");
+const defineRegionModel = require("../modules/master/region/model");
+const definePoolModel = require("../modules/master/pool/model");
+const defineDocTypeModel = require("../modules/master/tipeDokumen/model");
 const { defineNavMenuModel, defineNavItemModel } = require('../modules/menu/model');
 
 class TenantModelLoader {
@@ -149,6 +156,14 @@ class TenantModelLoader {
             WaDetailMode: defineWhatsappDetailModeModel(schema),
             WaAuthorizedUser: defineWhatsappAuthorizedUserModel(schema),
             WaLogSession: defineWhatsappMessageLogModel(schema),
+
+            // 🔻 BHJP MASTER DATA
+            Matel: defineMatelModel(schema),
+            Leasing: defineLeasingModel(schema),
+            UpahTarikRate: defineUpahTarikRateModel(schema),
+            Region: defineRegionModel(schema),
+            Pool: definePoolModel(schema),
+            DocType: defineDocTypeModel(schema),
 
             _associationsReady: false
         };
@@ -359,6 +374,25 @@ class TenantModelLoader {
         // Message Log ↔ Group
         m.WaLogSession.belongsTo(m.WaGroup, { as: 'group', foreignKey: 'group_id' });
         m.WaGroup.hasMany(m.WaLogSession, { as: 'messageLogs', foreignKey: 'group_id', onDelete: 'CASCADE' });
+
+
+        // Region ↔ Pool
+        if (m.Region && m.Pool) {
+            m.Pool.belongsTo(m.Region, { as: 'region', foreignKey: 'region_id' });
+            m.Region.hasMany(m.Pool, { as: 'pools', foreignKey: 'region_id' });
+        }
+
+// Leasing ↔ UpahTarikRate
+        if (m.Leasing && m.UpahTarikRate) {
+            m.UpahTarikRate.belongsTo(m.Leasing, { as: 'leasing', foreignKey: 'leasing_id' });
+            m.Leasing.hasMany(m.UpahTarikRate, { as: 'upahTarikRates', foreignKey: 'leasing_id' });
+        }
+
+// Region ↔ UpahTarikRate (opsional)
+        if (m.Region && m.UpahTarikRate) {
+            m.UpahTarikRate.belongsTo(m.Region, { as: 'region', foreignKey: 'region_id' });
+            m.Region.hasMany(m.UpahTarikRate, { as: 'upahTarikRates', foreignKey: 'region_id' });
+        }
 
         m._associationsReady = true;
     }
